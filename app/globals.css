@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -38,5 +38,157 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+} */
+
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+:root {
+  --primary-bg: #1c1c1c;
+  --accent-red: #d72638;
+  --secondary-grey: #3e3e3e;
+  --highlight-orange: #ff6b35;
+  --text-white: #f0f0f0;
+  --bs-dark: #1c1c1c;
+  --bs-secondary: #3e3e3e;
+  --bs-danger: #d72638;
+  --bs-warning: #ff6b35;
+  --bs-light: #f0f0f0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--primary-bg);
+  color: var(--text-white);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+
+.bg-primary-custom {
+  background-color: var(--primary-bg) !important;
+}
+
+.bg-secondary-custom {
+  background-color: var(--secondary-grey) !important;
+}
+
+.text-accent {
+  color: var(--accent-red) !important;
+}
+
+.text-highlight {
+  color: var(--highlight-orange) !important;
+}
+
+.btn-accent {
+  background-color: var(--accent-red);
+  border-color: var(--accent-red);
+  color: white;
+}
+
+.btn-accent:hover {
+  background-color: #b91e2e;
+  border-color: #b91e2e;
+  color: white;
+}
+
+.btn-highlight {
+  background-color: var(--highlight-orange);
+  border-color: var(--highlight-orange);
+  color: white;
+}
+
+.btn-highlight:hover {
+  background-color: #e55a2b;
+  border-color: #e55a2b;
+  color: white;
+}
+
+.card-dark {
+  background-color: var(--secondary-grey);
+  border: 1px solid #4a4a4a;
+  color: var(--text-white);
+}
+
+.form-control-dark {
+  background-color: var(--secondary-grey);
+  border-color: #4a4a4a;
+  color: var(--text-white);
+}
+
+.form-control-dark:focus {
+  background-color: var(--secondary-grey);
+  border-color: var(--accent-red);
+  color: var(--text-white);
+  box-shadow: 0 0 0 0.2rem rgba(215, 38, 56, 0.25);
+}
+
+.navbar-dark-custom {
+  background-color: var(--primary-bg);
+  border-bottom: 1px solid var(--secondary-grey);
+}
+
+.sidebar {
+  background-color: var(--primary-bg);
+  border-right: 1px solid var(--secondary-grey);
+  min-height: 100vh;
+}
+
+.chat-container {
+  background-color: var(--secondary-grey);
+  border-radius: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.chat-message {
+  background-color: var(--primary-bg);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+}
+
+.ride-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--secondary-grey);
+}
+
+.ride-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(215, 38, 56, 0.15);
+}
+
+.badge-difficulty {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bike-card {
+  background: linear-gradient(135deg, var(--secondary-grey) 0%, #2a2a2a 100%);
+  border: 1px solid #4a4a4a;
+  transition: all 0.3s ease;
+}
+
+.bike-card:hover {
+  border-color: var(--accent-red);
+  box-shadow: 0 4px 16px rgba(215, 38, 56, 0.2);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
   }
 }
