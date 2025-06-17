@@ -10,7 +10,7 @@ export default function Navbar() {
         <nav className="navbar navbar-expand-lg navbar-dark navbar-dark-custom sticky-top">
             <div className="container-fluid px-4">
                 <Link className="navbar-brand fw-bold text-accent" href="/">
-                    🏍️ BikeTouring Pro
+                    🏍️ PathPiston
                 </Link>
 
                 <button className="navbar-toggler border-0" type="button" onClick={() => setIsOpen(!isOpen)}>
