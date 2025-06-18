@@ -2,10 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { MapPin, Plus, Filter, Search, Calendar, Users, Clock, DollarSign } from "lucide-react"
 
 export default function RidesPage() {
     const [selectedCategory, setSelectedCategory] = useState("all")
     const [selectedDifficulty, setSelectedDifficulty] = useState("all")
+    const [searchTerm, setSearchTerm] = useState("")
 
     const rides = [
         {
@@ -61,7 +63,11 @@ export default function RidesPage() {
     const filteredRides = rides.filter((ride) => {
         const categoryMatch = selectedCategory === "all" || ride.category.toLowerCase() === selectedCategory
         const difficultyMatch = selectedDifficulty === "all" || ride.difficulty.toLowerCase() === selectedDifficulty
-        return categoryMatch && difficultyMatch
+        const searchMatch =
+            searchTerm === "" ||
+            ride.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ride.destination.toLowerCase().includes(searchTerm.toLowerCase())
+        return categoryMatch && difficultyMatch && searchMatch
     })
 
     const getDifficultyBadgeClass = (difficulty: string) => {
@@ -78,22 +84,32 @@ export default function RidesPage() {
     }
 
     return (
-        <div>
+        <div className="fade-in">
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1 className="h2 fw-bold">Available Rides</h1>
+                <div>
+                    <h1 className="h2 fw-bold mb-1 d-flex align-items-center">
+                        <MapPin className="text-accent me-3" size={32} />
+                        Available Rides
+                    </h1>
+                    <p className="text-muted mb-0">Discover and join amazing riding adventures</p>
+                </div>
                 <Link href="/create-ride" className="btn btn-accent">
-                    <span className="me-2">➕</span>Create New Ride
+                    <Plus size={18} className="me-2" />
+                    Create New Ride
                 </Link>
             </div>
 
             {/* Filters */}
-            <div className="card card-dark mb-4">
-                <div className="card-body">
-                    <div className="row align-items-center">
-                        <div className="col-md-4 mb-3 mb-md-0">
-                            <label className="form-label">Category</label>
+            <div className="card card-custom mb-4">
+                <div className="card-body p-4">
+                    <div className="row align-items-center g-3">
+                        <div className="col-md-3">
+                            <label className="form-label d-flex align-items-center mb-2">
+                                <Filter size={16} className="me-2" />
+                                Category
+                            </label>
                             <select
-                                className="form-select form-control-dark"
+                                className="form-select form-select-custom"
                                 value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
                             >
@@ -104,10 +120,13 @@ export default function RidesPage() {
                                 <option value="track">Track Day</option>
                             </select>
                         </div>
-                        <div className="col-md-4 mb-3 mb-md-0">
-                            <label className="form-label">Difficulty Level</label>
+                        <div className="col-md-3">
+                            <label className="form-label d-flex align-items-center mb-2">
+                                <Filter size={16} className="me-2" />
+                                Difficulty Level
+                            </label>
                             <select
-                                className="form-select form-control-dark"
+                                className="form-select form-select-custom"
                                 value={selectedDifficulty}
                                 onChange={(e) => setSelectedDifficulty(e.target.value)}
                             >
@@ -117,9 +136,21 @@ export default function RidesPage() {
                                 <option value="advanced">Advanced</option>
                             </select>
                         </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Search</label>
-                            <input type="text" className="form-control form-control-dark" placeholder="Search rides..." />
+                        <div className="col-md-6">
+                            <label className="form-label d-flex align-items-center mb-2">
+                                <Search size={16} className="me-2" />
+                                Search
+                            </label>
+                            <div className="position-relative">
+                                <input
+                                    type="text"
+                                    className="form-control form-control-custom ps-5"
+                                    placeholder="Search rides by title or destination..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                <Search className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" size={16} />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -129,7 +160,7 @@ export default function RidesPage() {
             <div className="row">
                 {filteredRides.map((ride) => (
                     <div key={ride.id} className="col-lg-4 col-md-6 mb-4">
-                        <div className="card ride-card card-dark h-100">
+                        <div className="card ride-card card-custom h-100">
                             <img
                                 src={ride.image || "/placeholder.svg"}
                                 className="card-img-top"
@@ -137,35 +168,41 @@ export default function RidesPage() {
                                 style={{ height: "200px", objectFit: "cover" }}
                             />
                             <div className="card-body d-flex flex-column">
-                                <div className="mb-2">
-                                    <span className="badge bg-secondary me-2">{ride.category}</span>
-                                    <span className={`badge ${getDifficultyBadgeClass(ride.difficulty)}`}>{ride.difficulty}</span>
+                                <div className="mb-3">
+                                    <div className="d-flex justify-content-between align-items-start mb-2">
+                                        <div className="d-flex gap-2">
+                                            <span className="badge bg-secondary">{ride.category}</span>
+                                            <span className={`badge ${getDifficultyBadgeClass(ride.difficulty)} badge-difficulty`}>
+                                                {ride.difficulty}
+                                            </span>
+                                        </div>
+                                        <small className="text-muted">by {ride.organizer}</small>
+                                    </div>
+                                    <h5 className="card-title fw-bold">{ride.title}</h5>
                                 </div>
 
-                                <h5 className="card-title">{ride.title}</h5>
-
                                 <div className="mb-3 flex-grow-1">
-                                    <div className="small text-muted mb-2">
-                                        <div className="d-flex align-items-center mb-1">
-                                            <span className="me-2">📅</span>
+                                    <div className="small text-muted">
+                                        <div className="d-flex align-items-center mb-2">
+                                            <Calendar size={14} className="me-2" />
                                             <span>
                                                 {ride.date} at {ride.time}
                                             </span>
                                         </div>
-                                        <div className="d-flex align-items-center mb-1">
-                                            <span className="me-2">📍</span>
+                                        <div className="d-flex align-items-center mb-2">
+                                            <MapPin size={14} className="me-2" />
                                             <span>{ride.meetingPoint}</span>
                                         </div>
-                                        <div className="d-flex align-items-center mb-1">
-                                            <span className="me-2">🎯</span>
-                                            <span>{ride.destination}</span>
+                                        <div className="d-flex align-items-center mb-2">
+                                            <MapPin size={14} className="me-2" />
+                                            <span>→ {ride.destination}</span>
                                         </div>
-                                        <div className="d-flex align-items-center mb-1">
-                                            <span className="me-2">📏</span>
+                                        <div className="d-flex align-items-center mb-2">
+                                            <Clock size={14} className="me-2" />
                                             <span>{ride.estimatedKM}</span>
                                         </div>
                                         <div className="d-flex align-items-center">
-                                            <span className="me-2">👥</span>
+                                            <Users size={14} className="me-2" />
                                             <span>
                                                 {ride.participants}/{ride.maxParticipants} riders
                                             </span>
@@ -174,12 +211,20 @@ export default function RidesPage() {
                                 </div>
 
                                 <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <div className="h5 text-accent mb-0">{ride.fees}</div>
-                                    <div className="small text-muted">by {ride.organizer}</div>
+                                    <div className="h5 text-accent mb-0 fw-bold d-flex align-items-center">
+                                        <DollarSign size={18} className="me-1" />
+                                        {ride.fees}
+                                    </div>
+                                    <div className="progress" style={{ width: "60px", height: "6px" }}>
+                                        <div
+                                            className="progress-bar bg-accent"
+                                            style={{ width: `${(ride.participants / ride.maxParticipants) * 100}%` }}
+                                        ></div>
+                                    </div>
                                 </div>
 
                                 <div className="d-flex gap-2">
-                                    <Link href={`/rides/${ride.id}`} className="btn btn-outline-light flex-grow-1">
+                                    <Link href={`/rides/${ride.id}`} className="btn btn-outline-secondary flex-grow-1">
                                         View Details
                                     </Link>
                                     <button className="btn btn-accent">Join Ride</button>
@@ -192,10 +237,13 @@ export default function RidesPage() {
 
             {filteredRides.length === 0 && (
                 <div className="text-center py-5">
-                    <div className="display-1 text-muted mb-3">🏍️</div>
-                    <h4 className="text-muted">No rides found</h4>
-                    <p className="text-muted">Try adjusting your filters or create a new ride</p>
+                    <div className="bg-secondary-custom rounded-circle p-4 d-inline-flex mb-4">
+                        <MapPin className="text-muted" size={48} />
+                    </div>
+                    <h4 className="text-muted mb-3">No rides found</h4>
+                    <p className="text-muted mb-4">Try adjusting your filters or create a new ride</p>
                     <Link href="/create-ride" className="btn btn-accent">
+                        <Plus size={16} className="me-2" />
                         Create New Ride
                     </Link>
                 </div>

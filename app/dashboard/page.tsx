@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Bike, Users, Wrench, Plus, Calendar, TrendingUp } from "lucide-react"
 
 export default function Dashboard() {
     const upcomingRides = [
@@ -8,6 +9,7 @@ export default function Dashboard() {
             date: "Dec 25, 2024",
             difficulty: "Advanced",
             participants: 8,
+            maxParticipants: 12,
         },
         {
             id: 2,
@@ -15,6 +17,7 @@ export default function Dashboard() {
             date: "Dec 30, 2024",
             difficulty: "Intermediate",
             participants: 12,
+            maxParticipants: 20,
         },
     ]
 
@@ -34,81 +37,86 @@ export default function Dashboard() {
     ]
 
     return (
-        <div>
+        <div className="fade-in">
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1 className="h2 fw-bold">Dashboard</h1>
-                <Link href="/create-ride" className="btn btn-accent">
-                    <span className="me-2">➕</span>Create New Ride
+                <div>
+                    <h1 className="h2 fw-bold mb-1">Dashboard</h1>
+                    <p className="text-muted mb-0">Welcome back, John! Ready for your next adventure?</p>
+                </div>
+                <Link href="/create-ride" className="btn btn-accent d-flex align-items-center">
+                    <Plus size={18} className="me-2" />
+                    Create New Ride
                 </Link>
             </div>
 
-            <div className="row mb-4">
-                <div className="col-md-3 mb-3">
-                    <div className="card card-dark border-0">
-                        <div className="card-body">
+            {/* Stats Cards */}
+            <div className="row mb-4 g-3">
+                <div className="col-lg-3 col-md-6">
+                    <div className="card stats-card border-0">
+                        <div className="card-body p-4">
                             <div className="d-flex align-items-center">
                                 <div className="flex-shrink-0">
-                                    <div className="bg-danger rounded-circle p-3">
-                                        <span className="text-white">🏍️</span>
+                                    <div className="bg-danger bg-opacity-10 rounded-circle p-3">
+                                        <Bike className="text-accent" size={24} />
                                     </div>
                                 </div>
                                 <div className="flex-grow-1 ms-3">
-                                    <div className="text-muted small">Total Rides</div>
-                                    <div className="h4 mb-0 text-accent">24</div>
+                                    <div className="text-muted small mb-1">Total Rides</div>
+                                    <div className="h4 mb-0 text-accent fw-bold">24</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="col-md-3 mb-3">
-                    <div className="card card-dark border-0">
-                        <div className="card-body">
+                <div className="col-lg-3 col-md-6">
+                    <div className="card stats-card border-0">
+                        <div className="card-body p-4">
                             <div className="d-flex align-items-center">
                                 <div className="flex-shrink-0">
-                                    <div className="bg-warning rounded-circle p-3">
-                                        <span className="text-white">📏</span>
+                                    <div className="bg-warning bg-opacity-10 rounded-circle p-3">
+                                        <TrendingUp className="text-highlight" size={24} />
                                     </div>
                                 </div>
                                 <div className="flex-grow-1 ms-3">
-                                    <div className="text-muted small">Total Distance</div>
-                                    <div className="h4 mb-0 text-highlight">3,250 KM</div>
+                                    <div className="text-muted small mb-1">Total Distance</div>
+                                    <div className="h4 mb-0 text-highlight fw-bold">3,250 KM</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="col-md-3 mb-3">
-                    <div className="card card-dark border-0">
-                        <div className="card-body">
+                <div className="col-lg-3 col-md-6">
+                    <div className="card stats-card border-0">
+                        <div className="card-body p-4">
                             <div className="d-flex align-items-center">
                                 <div className="flex-shrink-0">
-                                    <div className="bg-success rounded-circle p-3">
-                                        <span className="text-white">👥</span>
+                                    <div className="bg-success bg-opacity-10 rounded-circle p-3">
+                                        <Users className="text-success" size={24} />
                                     </div>
                                 </div>
                                 <div className="flex-grow-1 ms-3">
-                                    <div className="text-muted small">Connections</div>
-                                    <div className="h4 mb-0">156</div>
+                                    <div className="text-muted small mb-1">Connections</div>
+                                    <div className="h4 mb-0 fw-bold">156</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="col-md-3 mb-3">
-                    <div className="card card-dark border-0">
-                        <div className="card-body">
+                <div className="col-lg-3 col-md-6">
+                    <div className="card stats-card border-0">
+                        <div className="card-body p-4">
                             <div className="d-flex align-items-center">
                                 <div className="flex-shrink-0">
-                                    <div className="bg-info rounded-circle p-3">
-                                        <span className="text-white">🔧</span>
+                                    <div className="bg-info bg-opacity-10 rounded-circle p-3">
+                                        <Wrench className="text-info" size={24} />
                                     </div>
                                 </div>
                                 <div className="flex-grow-1 ms-3">
-                                    <div className="text-muted small">My Bikes</div>
-                                    <div className="h4 mb-0">3</div>
+                                    <div className="text-muted small mb-1">My Bikes</div>
+                                    <div className="h4 mb-0 fw-bold">3</div>
                                 </div>
                             </div>
                         </div>
@@ -118,23 +126,29 @@ export default function Dashboard() {
 
             <div className="row">
                 <div className="col-lg-8 mb-4">
-                    <div className="card card-dark">
-                        <div className="card-header d-flex justify-content-between align-items-center">
-                            <h5 className="mb-0">Upcoming Rides</h5>
-                            <Link href="/rides" className="btn btn-sm btn-outline-light">
+                    <div className="card card-custom">
+                        <div className="card-header d-flex justify-content-between align-items-center border-0 pb-0">
+                            <div className="d-flex align-items-center">
+                                <Calendar className="text-accent me-2" size={20} />
+                                <h5 className="mb-0 fw-semibold">Upcoming Rides</h5>
+                            </div>
+                            <Link href="/rides" className="btn btn-sm btn-outline-secondary">
                                 View All
                             </Link>
                         </div>
                         <div className="card-body">
                             {upcomingRides.map((ride) => (
-                                <div key={ride.id} className="d-flex align-items-center p-3 mb-3 bg-primary-custom rounded">
+                                <div key={ride.id} className="d-flex align-items-center p-3 mb-3 bg-secondary-custom rounded-3">
                                     <div className="flex-grow-1">
-                                        <h6 className="mb-1">{ride.title}</h6>
-                                        <div className="text-muted small">
-                                            <span className="me-3">📅 {ride.date}</span>
-                                            <span className="me-3">
+                                        <h6 className="mb-2 fw-semibold">{ride.title}</h6>
+                                        <div className="text-muted small d-flex flex-wrap gap-3">
+                                            <span className="d-flex align-items-center">
+                                                <Calendar size={14} className="me-1" />
+                                                {ride.date}
+                                            </span>
+                                            <span>
                                                 <span
-                                                    className={`badge ${ride.difficulty === "Advanced"
+                                                    className={`badge badge-difficulty ${ride.difficulty === "Advanced"
                                                             ? "bg-danger"
                                                             : ride.difficulty === "Intermediate"
                                                                 ? "bg-warning"
@@ -144,7 +158,10 @@ export default function Dashboard() {
                                                     {ride.difficulty}
                                                 </span>
                                             </span>
-                                            <span>👥 {ride.participants} riders</span>
+                                            <span className="d-flex align-items-center">
+                                                <Users size={14} className="me-1" />
+                                                {ride.participants}/{ride.maxParticipants} riders
+                                            </span>
                                         </div>
                                     </div>
                                     <Link href={`/rides/${ride.id}`} className="btn btn-sm btn-accent">
@@ -157,16 +174,19 @@ export default function Dashboard() {
                 </div>
 
                 <div className="col-lg-4 mb-4">
-                    <div className="card card-dark">
-                        <div className="card-header d-flex justify-content-between align-items-center">
-                            <h5 className="mb-0">My Bikes</h5>
-                            <Link href="/bikes" className="btn btn-sm btn-outline-light">
+                    <div className="card card-custom">
+                        <div className="card-header d-flex justify-content-between align-items-center border-0 pb-0">
+                            <div className="d-flex align-items-center">
+                                <Bike className="text-accent me-2" size={20} />
+                                <h5 className="mb-0 fw-semibold">My Bikes</h5>
+                            </div>
+                            <Link href="/bikes" className="btn btn-sm btn-outline-secondary">
                                 Manage
                             </Link>
                         </div>
                         <div className="card-body">
                             {myBikes.map((bike) => (
-                                <div key={bike.id} className="d-flex align-items-center p-2 mb-3 bg-primary-custom rounded">
+                                <div key={bike.id} className="d-flex align-items-center p-3 mb-3 bg-secondary-custom rounded-3">
                                     <img
                                         src={bike.image || "/placeholder.svg"}
                                         alt={bike.name}
@@ -179,6 +199,11 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             ))}
+
+                            <Link href="/bikes" className="btn btn-outline-secondary w-100 mt-2">
+                                <Plus size={16} className="me-2" />
+                                Add New Bike
+                            </Link>
                         </div>
                     </div>
                 </div>

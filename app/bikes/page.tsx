@@ -2,11 +2,14 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import { Bike, Plus, Edit3, Trash2, Wrench, Fuel, Gauge, Calendar } from "lucide-react"
 
 export default function BikesPage() {
   const [showAddModal, setShowAddModal] = useState(false)
-  const [editingBike, setEditingBike] = useState<any>(null)
+  const [highlightedBike, setHighlightedBike] = useState<number | null>(null)
+  const searchParams = useSearchParams()
 
   const [bikes, setBikes] = useState([
     {
@@ -56,6 +59,15 @@ export default function BikesPage() {
     fuelCapacity: "",
   })
 
+  useEffect(() => {
+    const highlight = searchParams.get("highlight")
+    if (highlight) {
+      setHighlightedBike(Number.parseInt(highlight))
+      // Remove highlight after 3 seconds
+      setTimeout(() => setHighlightedBike(null), 3000)
+    }
+  }, [searchParams])
+
   const handleAddBike = (e: React.FormEvent) => {
     e.preventDefault()
     const bike = {
@@ -95,18 +107,30 @@ export default function BikesPage() {
   }
 
   return (
-    <div>
+    <div className="fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h2 fw-bold">My Bikes</h1>
+        <div>
+          <h1 className="h2 fw-bold mb-1 d-flex align-items-center">
+            <Bike className="text-accent me-3" size={32} />
+            My Bikes
+          </h1>
+          <p className="text-muted mb-0">Manage your motorcycle collection</p>
+        </div>
         <button className="btn btn-accent" onClick={() => setShowAddModal(true)}>
-          <span className="me-2">➕</span>Add New Bike
+          <Plus size={18} className="me-2" />
+          Add New Bike
         </button>
       </div>
 
       <div className="row">
         {bikes.map((bike) => (
           <div key={bike.id} className="col-lg-6 col-xl-4 mb-4">
-            <div className="card bike-card h-100">
+            <div
+              className={`card bike-card h-100 ${highlightedBike === bike.id ? "border-accent shadow-lg" : ""}`}
+              style={{
+                animation: highlightedBike === bike.id ? "pulse 2s ease-in-out" : "none",
+              }}
+            >
               <img
                 src={bike.image || "/placeholder.svg"}
                 className="card-img-top"
@@ -114,30 +138,42 @@ export default function BikesPage() {
                 style={{ height: "200px", objectFit: "cover" }}
               />
               <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{bike.name}</h5>
+                <h5 className="card-title fw-bold">{bike.name}</h5>
                 <p className="text-muted mb-3">
                   {bike.model} • {bike.color}
                 </p>
 
                 <div className="row mb-3 flex-grow-1">
                   <div className="col-6">
-                    <div className="mb-2">
-                      <div className="small text-muted">Engine</div>
+                    <div className="mb-3">
+                      <div className="small text-muted d-flex align-items-center mb-1">
+                        <Wrench size={14} className="me-1" />
+                        Engine
+                      </div>
                       <div className="fw-semibold">{bike.engine}</div>
                     </div>
-                    <div className="mb-2">
-                      <div className="small text-muted">Power</div>
+                    <div className="mb-3">
+                      <div className="small text-muted d-flex align-items-center mb-1">
+                        <Gauge size={14} className="me-1" />
+                        Power
+                      </div>
                       <div className="fw-semibold">{bike.specs.power}</div>
                     </div>
                   </div>
                   <div className="col-6">
-                    <div className="mb-2">
-                      <div className="small text-muted">Type</div>
-                      <div className="fw-semibold">{bike.type}</div>
+                    <div className="mb-3">
+                      <div className="small text-muted d-flex align-items-center mb-1">
+                        <Calendar size={14} className="me-1" />
+                        Year
+                      </div>
+                      <div className="fw-semibold">{bike.year}</div>
                     </div>
-                    <div className="mb-2">
-                      <div className="small text-muted">Weight</div>
-                      <div className="fw-semibold">{bike.specs.weight}</div>
+                    <div className="mb-3">
+                      <div className="small text-muted d-flex align-items-center mb-1">
+                        <Fuel size={14} className="me-1" />
+                        Fuel Tank
+                      </div>
+                      <div className="fw-semibold">{bike.specs.fuelCapacity}</div>
                     </div>
                   </div>
                 </div>
@@ -148,11 +184,12 @@ export default function BikesPage() {
                 </div>
 
                 <div className="d-flex gap-2 mt-auto">
-                  <button className="btn btn-sm btn-outline-light flex-grow-1" onClick={() => setEditingBike(bike)}>
+                  <button className="btn btn-sm btn-outline-secondary flex-grow-1">
+                    <Edit3 size={14} className="me-1" />
                     Edit
                   </button>
                   <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteBike(bike.id)}>
-                    Delete
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
@@ -162,10 +199,13 @@ export default function BikesPage() {
 
         {bikes.length === 0 && (
           <div className="col-12 text-center py-5">
-            <div className="display-1 text-muted mb-3">🏍️</div>
-            <h4 className="text-muted">No bikes added yet</h4>
-            <p className="text-muted">Add your first bike to get started</p>
+            <div className="bg-secondary-custom rounded-circle p-4 d-inline-flex mb-4">
+              <Bike className="text-muted" size={48} />
+            </div>
+            <h4 className="text-muted mb-3">No bikes added yet</h4>
+            <p className="text-muted mb-4">Add your first bike to get started with your riding journey</p>
             <button className="btn btn-accent" onClick={() => setShowAddModal(true)}>
+              <Plus size={16} className="me-2" />
               Add Your First Bike
             </button>
           </div>
@@ -176,13 +216,17 @@ export default function BikesPage() {
       {showAddModal && (
         <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog modal-lg">
-            <div className="modal-content bg-secondary-custom">
-              <div className="modal-header">
-                <h5 className="modal-title">Add New Bike</h5>
+            <div className="modal-content bg-card-custom border-custom">
+              <div className="modal-header border-custom">
+                <h5 className="modal-title d-flex align-items-center">
+                  <Plus className="text-accent me-2" size={20} />
+                  Add New Bike
+                </h5>
                 <button
                   type="button"
-                  className="btn-close btn-close-white"
+                  className="btn-close"
                   onClick={() => setShowAddModal(false)}
+                  aria-label="Close"
                 ></button>
               </div>
               <form onSubmit={handleAddBike}>
@@ -192,7 +236,7 @@ export default function BikesPage() {
                       <label className="form-label">Bike Name *</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.name}
                         onChange={(e) => setNewBike({ ...newBike, name: e.target.value })}
                         placeholder="e.g., Royal Enfield Himalayan"
@@ -203,7 +247,7 @@ export default function BikesPage() {
                       <label className="form-label">Model/Year *</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.model}
                         onChange={(e) => setNewBike({ ...newBike, model: e.target.value })}
                         placeholder="e.g., 2024"
@@ -217,7 +261,7 @@ export default function BikesPage() {
                       <label className="form-label">Engine *</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.engine}
                         onChange={(e) => setNewBike({ ...newBike, engine: e.target.value })}
                         placeholder="e.g., 411cc"
@@ -227,7 +271,7 @@ export default function BikesPage() {
                     <div className="col-md-4 mb-3">
                       <label className="form-label">Type *</label>
                       <select
-                        className="form-select form-control-dark"
+                        className="form-select form-select-custom"
                         value={newBike.type}
                         onChange={(e) => setNewBike({ ...newBike, type: e.target.value })}
                         required
@@ -244,7 +288,7 @@ export default function BikesPage() {
                       <label className="form-label">Color</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.color}
                         onChange={(e) => setNewBike({ ...newBike, color: e.target.value })}
                         placeholder="e.g., Granite Black"
@@ -257,7 +301,7 @@ export default function BikesPage() {
                       <label className="form-label">Power</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.power}
                         onChange={(e) => setNewBike({ ...newBike, power: e.target.value })}
                         placeholder="e.g., 24.3 HP"
@@ -267,7 +311,7 @@ export default function BikesPage() {
                       <label className="form-label">Torque</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.torque}
                         onChange={(e) => setNewBike({ ...newBike, torque: e.target.value })}
                         placeholder="e.g., 32 Nm"
@@ -277,7 +321,7 @@ export default function BikesPage() {
                       <label className="form-label">Weight</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.weight}
                         onChange={(e) => setNewBike({ ...newBike, weight: e.target.value })}
                         placeholder="e.g., 199 kg"
@@ -287,7 +331,7 @@ export default function BikesPage() {
                       <label className="form-label">Fuel Capacity</label>
                       <input
                         type="text"
-                        className="form-control form-control-dark"
+                        className="form-control form-control-custom"
                         value={newBike.fuelCapacity}
                         onChange={(e) => setNewBike({ ...newBike, fuelCapacity: e.target.value })}
                         placeholder="e.g., 15 L"
@@ -295,11 +339,12 @@ export default function BikesPage() {
                     </div>
                   </div>
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-outline-light" onClick={() => setShowAddModal(false)}>
+                <div className="modal-footer border-custom">
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => setShowAddModal(false)}>
                     Cancel
                   </button>
                   <button type="submit" className="btn btn-accent">
+                    <Plus size={16} className="me-2" />
                     Add Bike
                   </button>
                 </div>
@@ -308,6 +353,17 @@ export default function BikesPage() {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 rgba(215, 38, 56, 0.4); }
+          70% { box-shadow: 0 0 0 10px rgba(215, 38, 56, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(215, 38, 56, 0); }
+        }
+        .border-accent {
+          border-color: var(--accent-red) !important;
+        }
+      `}</style>
     </div>
   )
 }
