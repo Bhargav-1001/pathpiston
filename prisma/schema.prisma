@@ -46,6 +46,7 @@ model RideEvent {
   id               Int               @id @default(autoincrement())
   title            String
   description      String?
+  photo            String?
   date             DateTime
   time             String
   meetingPoint     String

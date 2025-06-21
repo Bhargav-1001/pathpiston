@@ -13,7 +13,6 @@ export default function Sidebar() {
         { href: "/bikes", label: "My Bikes", icon: Bike },
         { href: "/profile", label: "Profile", icon: User },
         { href: "/joined-rides", label: "Joined Rides", icon: Calendar },
-        { href: "/chat", label: "Group Chats", icon: MessageCircle },
     ]
 
     const isActive = (href: string) => {

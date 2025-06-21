@@ -68,7 +68,7 @@
 //     }
 //   }, [searchParams])
 
-  
+
 
 
 //   const handleAddBike = (e: React.FormEvent) => {
@@ -105,14 +105,14 @@
 //     setShowAddModal(false)
 //   }
 
-  
+
 
 
 //   const handleDeleteBike = (id: number) => {
 //     setBikes(bikes.filter((bike) => bike.id !== id))
 //   }
 
-  
+
 
 
 //   return (
@@ -379,88 +379,146 @@
 
 
 
-"use client"
 
-import type React from "react"
 import { Bike, Wrench, Fuel, Gauge, Calendar } from "lucide-react"
 import { PrismaClient } from "../generated/prisma";
+import { revalidatePath } from "next/cache";
+import DeleteButton from "./deleteBike";
+import Link from "next/link";
+
+// export default async function BikesPage() {
+
+//   const prisma = new PrismaClient();
+//   const data = await prisma.bike.findMany();
+//   // console.log(data);
+
+//   return (
+//     <>
+//       <div className="fade-in">
+//         {data.map((bike: any) => (
+//           <div key={bike.id} className="col-lg-6 col-xl-4 mb-4">
+//             <div className="card bike-card h-100">
+//               <img
+//                 src={bike.photo || "/placeholder.svg?height=200&width=300"}
+//                 className="card-img-top"
+//                 alt={bike.name}
+//                 style={{ height: "200px", objectFit: "cover" }}
+//               />
+//               <div className="card-body d-flex flex-column">
+//                 <h5 className="card-title fw-bold">{bike.name}</h5>
+//                 <p className="text-muted mb-3">
+//                   {bike.model}
+//                 </p>
+
+//                 <div className="row mb-3 flex-grow-1">
+
+//                   <div className="col-6">
+
+//                     <div className="mb-3">
+//                       <div className="small text-muted d-flex align-items-center mb-1">
+//                         <Wrench size={14} className="me-1" />
+//                         Specifications
+//                       </div>
+//                       <ul className="fw-semibold list-unstyled">
+//                         {bike.specs.split(", ").map((spec: string, index: number) => (
+//                           <li key={index}>{spec}</li>
+//                         ))}
+//                       </ul>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="mb-3">
+//                   <span className="badge bg-secondary me-2">{bike.type}</span>
+//                   <span className="badge bg-outline-light">{bike.year}</span>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         ))}
+
+//       </div>
+//     </>
+//   )
+// }
 
 export default async function BikesPage() {
-
   const prisma = new PrismaClient();
   const data = await prisma.bike.findMany();
-  console.log(data);
+
+  async function deleteBike(id: any) {
+    "use server"
+
+    const prisma = new PrismaClient();
+    const dataDelete = await prisma.bike.delete({
+      where: {
+        id: id,
+      },
+    });
+    console.log(dataDelete);
+    revalidatePath("/bikes");
+  }
+
+
 
   return (
-    <div className="fade-in">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h1 className="h2 fw-bold mb-1 d-flex align-items-center">
+    <>
+      <div className="fade-in">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1 className="h2 fw-bold">
             <Bike className="text-accent me-3" size={32} />
             My Bikes
           </h1>
-          <p className="text-muted mb-0">Manage your motorcycle collection</p>
+          <Link href="/add_bikes">
+            <button className="btn btn-accent">
+              Add New Bike
+            </button>
+          </Link>
         </div>
-      </div>
 
-      <div className="row">
-        <div className="col-lg-6 col-xl-4 mb-4">
-          <div className="card bike-card h-100">
-            <img
-              src="/placeholder.svg?height=200&width=300"
-              className="card-img-top"
-              alt="Royal Enfield Himalayan"
-              style={{ height: "200px", objectFit: "cover" }}
-            />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title fw-bold">Royal Enfield Himalayan</h5>
-              <p className="text-muted mb-3">
-                2024 • Granite Black
-              </p>
+        <div className="row row-cols-1 row-cols-md-3 g-4">
+          {data.map((bike: any) => (
+            <div key={bike.id} className="col">
+              <div className="card bike-card h-100">
+                <img
+                  src={bike.photo || "/placeholder.svg?height=200&width=300"}
+                  className="card-img-top"
+                  alt={bike.name}
+                  style={{ height: "200px", objectFit: "cover" }}
+                />
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title fw-bold">{bike.name}</h5>
+                  <p className="text-muted mb-3">{bike.model}</p>
 
-              <div className="row mb-3 flex-grow-1">
-                <div className="col-6">
-                  <div className="mb-3">
-                    <div className="small text-muted d-flex align-items-center mb-1">
-                      <Wrench size={14} className="me-1" />
-                      Engine
+                  <div className="row mb-3 flex-grow-1">
+                    <div className="col-12">
+                      <div className="mb-3">
+                        <div className="small text-muted d-flex align-items-center mb-2">
+                          <Wrench size={14} className="me-1" />
+                          Specifications
+                        </div>
+                        <div className="d-flex flex-wrap gap-2">
+                          {bike.specs.split(", ").map((spec: string, index: number) => (
+                            <span key={index} className="badge bg-light text-dark">
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <div className="fw-semibold">411cc</div>
                   </div>
+
                   <div className="mb-3">
-                    <div className="small text-muted d-flex align-items-center mb-1">
-                      <Gauge size={14} className="me-1" />
-                      Power
-                    </div>
-                    <div className="fw-semibold">24.3 HP</div>
+                    <span ><DeleteButton fnToDelete={deleteBike} id={bike.id} /></span>
+                    <span className="badge bg-outline-light"><Link href={"/edit_bikes/"+ bike.id}>Eidt Bikes</Link></span>
                   </div>
                 </div>
-                <div className="col-6">
-                  <div className="mb-3">
-                    <div className="small text-muted d-flex align-items-center mb-1">
-                      <Calendar size={14} className="me-1" />
-                      Year
-                    </div>
-                    <div className="fw-semibold">2024</div>
-                  </div>
-                  <div className="mb-3">
-                    <div className="small text-muted d-flex align-items-center mb-1">
-                      <Fuel size={14} className="me-1" />
-                      Fuel Tank
-                    </div>
-                    <div className="fw-semibold">15 L</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-3">
-                <span className="badge bg-secondary me-2">Adventure</span>
-                <span className="badge bg-outline-light">2024</span>
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
-    </div>
-  )
+    </>
+  );
 }
+

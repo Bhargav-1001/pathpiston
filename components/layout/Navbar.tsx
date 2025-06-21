@@ -29,7 +29,7 @@ export default function Navbar() {
             <div className="container-fluid px-4">
                 <Link className="navbar-brand fw-bold text-accent d-flex align-items-center" href="/">
                     <Bike className="me-2" size={24} />
-                    BikeTouring Pro
+                    PathPiston
                 </Link>
 
                 <button
